@@ -150,7 +150,6 @@
   <ItemGroup>
     <ClInclude Include="fre_black.h" />
     <ClInclude Include="fre_bsm.h" />
-    <ClInclude Include="fre_logistic.h" />
     <ClInclude Include="fre_normal.h" />
     <ClInclude Include="xll_fre.h" />
   </ItemGroup>
@@ -158,6 +157,7 @@
     <ClCompile Include="xll_black.cpp" />
     <ClCompile Include="xll_bsm.cpp" />
     <ClCompile Include="xll_fre.cpp" />
+    <ClCompile Include="xll_normal.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

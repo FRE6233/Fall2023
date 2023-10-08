@@ -10,9 +10,9 @@ namespace fre::bsm {
 #pragma warning(disable: 4100)
 	namespace put {
 		// Value is E[(k - S)^+]/R, where R = exp(r t).
-		//           ------------market-----------
-		//           --bond--|-------stock--------  ------option------
-		double value(double r, double S0, double σ, double k, double t)
+		//                  ------------market-----------
+		//                  --bond--|-------stock--------  ------option------
+		inline double value(double r, double S0, double σ, double k, double t)
 		{
 			double R = 0; //!!! implement this
 			double f = 0; //!!! implement this

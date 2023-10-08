@@ -24,7 +24,7 @@ namespace fre::normal {
 	// standard normal cumulant generating function
 	inline double cgf(double s)
 	{
-		return -s * s / 2;
+		return s * s / 2;
 	}
 	// standard normal inverse cumulative distribution function
 	inline double inv(double p)
