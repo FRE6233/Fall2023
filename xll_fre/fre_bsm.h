@@ -15,8 +15,8 @@ namespace fre::bsm {
 		inline double value(double r, double S0, double σ, double k, double t)
 		{
 			double R = std::exp(r*t); 
-			double f = R*S0; //!!! implement this
-			double s = σ*std::sqrt(t); //!!! implement this
+			double f = R*S0; 
+			double s = σ*std::sqrt(t);
 
 			return fre::black::put::value(f, s, k)/R;  
 		}
