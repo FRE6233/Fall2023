@@ -22,7 +22,7 @@ namespace fre::black {
 			return k * fre::normal::cdf(m) - f * fre::normal::cdf(m, s);
 		}
 
-		// (d/df)E[(k - F)^+] = E[-1(F <= k) exp(sZ - s^2/2] = -P^s(Z <= k)
+		// (d/df)E[(k - F)^+] = E[-1(F <= k) exp(sZ - s^2/2)] = -P^s(Z <= k)
 		inline double delta(double f, double s, double k)
 		{
 			double m = moneyness(f, k, s);

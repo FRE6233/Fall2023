@@ -14,11 +14,11 @@ namespace fre::bsm {
 		//                  --bond--|-------stock--------  ------option------
 		inline double value(double r, double S0, double σ, double k, double t)
 		{
-			double R = 0; //!!! implement this
-			double f = 0; //!!! implement this
-			double s = 0; //!!! implement this
+			double R = std::exp(r*t); 
+			double f = R*S0; 
+			double s = σ*std::sqrt(t);
 
-			return fre::black::put::value(f, s, k)/R;
+			return fre::black::put::value(f, s, k)/R;  
 		}
 	}
 } // namespace fre::bsm
