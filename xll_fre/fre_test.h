@@ -19,7 +19,8 @@ namespace fre::test {
 	template<class F, class X = double>
 	inline std::tuple<X, X> monte_carlo_mean_variance(const F& f, size_t N)
 	{
-		X m = 0, v2 = 0;
+		X m = 0;  // (1/n) sum x_j
+		X v2 = 0; // (1/n) sum x_j^2
 
 		// m_n = (x_0 + ... + x_n)/n
 		// n m_n - (n - 1) m_{n-1} = x_n
