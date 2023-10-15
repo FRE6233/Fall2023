@@ -1,7 +1,7 @@
 // fre_normal.h - standard normal distribution
 #pragma once
 #define _USE_MATH_DEFINES
-#include <cmath>
+#include <math.h>
 
 // standard normal distribution
 namespace fre::normal {
@@ -11,7 +11,7 @@ namespace fre::normal {
 	{
 		x = x - s;
 
-		return std::exp(-x * x / 2) / std::sqrt(2 * M_PI);
+		return exp(-x * x / 2) / sqrt(2 * M_PI);
 	}
 	// standard normal cumulative share distribution function
 	// P^s(Z <= x) = P(Z <= x - s)
@@ -19,19 +19,12 @@ namespace fre::normal {
 	{
 		x = x - s;
 
-		return std::erfc(-x / M_SQRT2) / 2;
+		return erfc(-x / M_SQRT2) / 2;
 	}
 	// standard normal cumulant generating function
 	inline double cgf(double s)
 	{
 		return s * s / 2;
-	}
-	// standard normal inverse cumulative distribution function
-	inline double inv(double p)
-	{
-		double s = std::sqrt(3) / M_PI;
-
-		return s / (p * (1 - p)); // for now!!!
 	}
 
 } // namespace fre

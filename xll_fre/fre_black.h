@@ -9,7 +9,7 @@ namespace fre::black {
 	// F <= k iff Z <= log(k/f)/s + s/2
 	inline double moneyness(double f, double k, double s)
 	{
-		return std::log(k / f) / s + s / 2;
+		return log(k / f) / s + s / 2;
 	}
 
 	namespace put {
@@ -19,15 +19,15 @@ namespace fre::black {
 		{
 			double m = moneyness(f, k, s);
 
-			return k * fre::normal::cdf(m) - f * fre::normal::cdf(m, s);
+			return k * normal::cdf(m) - f * normal::cdf(m, s);
 		}
 
-		// (d/df)E[(k - F)^+] = E[-1(F <= k) exp(sZ - s^2/2)] = -P^s(Z <= k)
+		// (d/df)E[(k - F)^+] = E[-1(F <= k) dF/df] = -P^s(Z <= m)
 		inline double delta(double f, double s, double k)
 		{
 			double m = moneyness(f, k, s);
 
-			return -fre::normal::cdf(m, s);
+			return -normal::cdf(m, s);
 		}
 	}
 	namespace call {
@@ -38,7 +38,7 @@ namespace fre::black {
 			return put::value(f, s, k) + f - k;
 		}
 
-		// call delts - put delta = 1
+		// call delta - put delta = 1
 		inline double delta(double f, double s, double k)
 		{
 			return put::delta(f, s, k) + 1;
