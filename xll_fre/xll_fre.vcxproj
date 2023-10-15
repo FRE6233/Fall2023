@@ -151,6 +151,7 @@
     <ClInclude Include="fre_black.h" />
     <ClInclude Include="fre_bsm.h" />
     <ClInclude Include="fre_normal.h" />
+    <ClInclude Include="fre_test.h" />
     <ClInclude Include="xll_fre.h" />
   </ItemGroup>
   <ItemGroup>
