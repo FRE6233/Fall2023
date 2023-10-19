@@ -3,6 +3,10 @@
 // Note E[F] = f and Var(log F) = s^2.
 #pragma once
 #include "fre_normal.h"
+#ifdef _DEBUG
+#include <cassert>
+#include "fre_test.h"
+#endif // _DEBUG
 
 namespace fre::black {
 
@@ -21,7 +25,6 @@ namespace fre::black {
 
 			return k * normal::cdf(m) - f * normal::cdf(m, s);
 		}
-
 		// (d/df)E[(k - F)^+] = E[-1(F <= k) dF/df] = -P^s(Z <= m)
 		inline double delta(double f, double s, double k)
 		{
@@ -29,6 +32,28 @@ namespace fre::black {
 
 			return -normal::cdf(m, s);
 		}
+		// (d/ds)E[(k - F)^+] = E[-1(F <= k) dF/ds] = -P^s(Z <= m) (Z - s)
+		inline double vega(double f, double s, double k)
+		{
+			double m = moneyness(f, k, s);
+
+			return -normal::cdf(m, s) * (m - s);
+		}
+#ifdef _DEBUG
+		inline int vega_test()
+		{
+			double f = 100, s = 0.2, k = 100;
+			double v = vega(f, s, k);
+			double h = 0.00001;
+			double vup= value(f, s + h, k);
+			double vdn = value(f, s - h, k);
+			double dv = (vup - vdn) / (2 * h);
+			double err = v - dv;
+			assert(fabs(err) < h * h);
+
+			return 0;
+		}
+#endif // _DEBUG
 	}
 	namespace call {
 

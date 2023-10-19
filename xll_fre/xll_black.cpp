@@ -4,6 +4,8 @@
 
 using namespace xll;
 
+int test_vega = fre::black::put::vega_test();
+
 AddIn xai_moneyness(
 	Function(XLL_DOUBLE, "xll_moneyness", "BLACK.MONEYNESS")
 	.Arguments({
