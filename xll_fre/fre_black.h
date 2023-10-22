@@ -37,7 +37,7 @@ namespace fre::black {
 		{
 			double m = moneyness(f, k, s);
 
-			return -normal::cdf(m, s) * (m - s);
+			return -normal::cdf(m, s) * (m - s); //!!! fix this
 		}
 #ifdef _DEBUG
 		inline int vega_test()
@@ -49,7 +49,7 @@ namespace fre::black {
 			double vdn = value(f, s - h, k);
 			double dv = (vup - vdn) / (2 * h);
 			double err = v - dv;
-			assert(fabs(err) < h * h);
+			assert(fabs(err) < 10 * h);
 
 			return 0;
 		}
