@@ -37,7 +37,7 @@ namespace fre::black {
 		{
 			double m = moneyness(f, k, s);
 
-			return -normal::cdf(m, s) * (m - s); //!!! fix this
+			return f*normal::pdf(m, s); //!!! fix this
 		}
 #ifdef _DEBUG
 		inline int vega_test()
