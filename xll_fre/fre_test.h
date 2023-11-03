@@ -1,5 +1,6 @@
 // fre_test.h - test routines
 #pragma once
+#include <random>
 #include <tuple>
 
 namespace fre::test {
@@ -32,6 +33,21 @@ namespace fre::test {
 		}
 
 		return { m, v2 - m * m };
+	}
+
+	inline double uniform(double a = 0, double b = 1)
+	{
+		static std::random_device rd;
+		std::uniform_real_distribution<> dis(a, b);
+
+		return dis(rd);
+	}
+	inline double normal(double mu = 0, double sigma = 1)
+	{
+		static std::random_device rd;
+		std::normal_distribution<> dis(mu, sigma);
+
+		return dis(rd);
 	}
 
 } // fre::test

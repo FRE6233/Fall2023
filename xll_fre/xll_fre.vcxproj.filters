@@ -33,6 +33,9 @@
     <ClInclude Include="fre_ho_lee.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fre_bachelier.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xll_fre.cpp">
@@ -48,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xll_ho_lee.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xll_bachelier.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

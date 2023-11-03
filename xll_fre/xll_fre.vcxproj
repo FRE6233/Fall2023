@@ -148,6 +148,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="fre_bachelier.h" />
     <ClInclude Include="fre_black.h" />
     <ClInclude Include="fre_bsm.h" />
     <ClInclude Include="fre_ho_lee.h" />
@@ -156,6 +157,7 @@
     <ClInclude Include="xll_fre.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="xll_bachelier.cpp" />
     <ClCompile Include="xll_black.cpp" />
     <ClCompile Include="xll_bsm.cpp" />
     <ClCompile Include="xll_fre.cpp" />

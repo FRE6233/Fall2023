@@ -4,10 +4,12 @@
 
 using namespace xll;
 
+#ifdef _DEBUG
 int test_vega = fre::black::put::vega_test();
+#endif // _DEBUG
 
-AddIn xai_moneyness(
-	Function(XLL_DOUBLE, "xll_moneyness", "BLACK.MONEYNESS")
+AddIn xai_black_moneyness(
+	Function(XLL_DOUBLE, "xll_black_moneyness", "BLACK.MONEYNESS")
 	.Arguments({
 		Arg(XLL_DOUBLE, "f", "is the forward price."),
 		Arg(XLL_DOUBLE, "s", "is the volatility."),
@@ -16,7 +18,7 @@ AddIn xai_moneyness(
 	.Category(CATEGORY)
 	.FunctionHelp("Return the moneyness.")
 );
-double WINAPI xll_moneyness(double f, double s, double k)
+double WINAPI xll_black_moneyness(double f, double s, double k)
 {
 #pragma XLLEXPORT
 

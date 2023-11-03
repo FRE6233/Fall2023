@@ -30,7 +30,7 @@ namespace fre::ho_lee {
 		return std::normal_distribution(φ, σ * t * u); // !!!
 	}
 
-	// φ_t(u) - f_t(u) = ???
+	// φ(u) - f_t(u) = ???
 	// Return mean and standard deviation of φ_t(u) - f_t(u)
 	inline std::normal_distribution<double> convexity(double σ, double t, double u)
 	{

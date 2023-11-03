@@ -4,7 +4,7 @@
 
 using namespace xll;
 
-AddIn xai_norrmal_pdf(
+AddIn xai_normal_pdf(
 	Function(XLL_DOUBLE, "xll_normal_pdf", "NORMAL.PDF")
 	.Arguments({
 		Arg(XLL_DOUBLE, "x", "is the value at which you evaluate the density function."),
