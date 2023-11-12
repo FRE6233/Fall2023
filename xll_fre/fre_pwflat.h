@@ -41,7 +41,7 @@ namespace fre {
 
 		// f(u) assuming t[i] monotonically increasing
 		template<class T = double, class F = double>
-		inline F value(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
+		constexpr F value(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
 		{
 			if (u < 0)
 				return NaN<F>;
@@ -55,7 +55,7 @@ namespace fre {
 
 		// int_0^u f(t) dt
 		template<class T, class F>
-		inline F integral(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
+		constexpr F integral(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
 		{
 			if (u < 0)
 				return NaN<F>;
@@ -81,7 +81,7 @@ namespace fre {
 
 		// discount D(u) = exp(-int_0^u f(t) dt)
 		template<class T, class F>
-		inline F discount(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
+		constexpr F discount(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
 		{
 			return exp(-integral(u, n, t, f, _f));
 		}
@@ -89,7 +89,7 @@ namespace fre {
 		// spot r(u) = (int_0^u f(t) dt)/u
 		// r(u) = f(u) if u <= t[0]
 		template<class T, class F>
-		inline F spot(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
+		constexpr F spot(T u, size_t n, const T* t, const F* f, F _f = NaN<F>)
 		{
 			return n == 0 ? _f
 				: u <= t[0] ? value(u, n, t, f, _f) : integral(u, n, t, f, _f) / u;
@@ -101,23 +101,23 @@ namespace fre {
 			std::vector<F> f;
 			F _f;
 		public:
-			curve()
+			constexpr curve()
 				: _f(NaN<F>)
 			{ }
-			curve(size_t n, const T* t_, const F* f_, F _f = NaN<F>)
+			constexpr curve(size_t n, const T* t_, const F* f_, F _f = NaN<F>)
 				: t(t_, t_ + n), f(f_, f_ + n), _f(_f)
 			{
 				ensure(ok());
 			}
-			curve(const std::vector<T>& t, const std::vector<F>& f, F _f = NaN<F>)
+			constexpr curve(const std::vector<T>& t, const std::vector<F>& f, F _f = NaN<F>)
 				: t(t), f(f), _f(_f)
 			{
 				ensure(ok());
 			}
-			curve(const curve&) = default;
-			curve& operator=(const curve&) = default;
-			curve(curve&&) = default;
-			curve& operator=(curve&&) = default;
+			constexpr curve(const curve&) = default;
+			constexpr curve& operator=(const curve&) = default;
+			constexpr curve(curve&&) = default;
+			constexpr curve& operator=(curve&&) = default;
 			~curve()
 			{ }
 
@@ -126,19 +126,19 @@ namespace fre {
 				return t.size() == f.size() && (t.size() == 0 || t[0] > 0 && monotonic(t.begin(), t.end()));
 			}
 
-			size_t size() const
+			constexpr size_t size() const
 			{
 				return t.size();
 			}
-			const T* time() const
+			constexpr const T* time() const
 			{
 				return t.data();
 			}
-			const F* forward() const
+			constexpr const F* forward() const
 			{
 				return f.data();
 			}
-			const F* rate() const
+			constexpr const F* rate() const
 			{
 				return f.data();
 			}
@@ -158,33 +158,33 @@ namespace fre {
 				return *this;
 			}
 			// Get extrapolated value.
-			F extrapolate() const
+			constexpr F extrapolate() const
 			{
 				return _f;
 			}
 			// Set extrapolated value.
-			curve& extrapolate(F f_)
+			constexpr curve& extrapolate(F f_)
 			{
 				_f = f_;
 			}
 
-			F value(T u) const
+			constexpr F value(T u) const
 			{
 				return pwflat::value(u, t.size(), t.data(), f.data(), _f);
 			}
-			F operator()(T u) const
+			constexpr F operator()(T u) const
 			{
 				return value(u);
 			}
-			F integral(T u) const
+			constexpr F integral(T u) const
 			{
 				return pwflat::integral(u, t.size(), t.data(), f.data(), _f);
 			}
-			F discount(T u) const
+			constexpr F discount(T u) const
 			{
 				return pwflat::discount(u, t.size(), t.data(), f.data(), _f);
 			}
-			F spot(T u) const
+			constexpr F spot(T u) const
 			{
 				return pwflat::spot(u, t.size(), t.data(), f.data(), _f);
 			}

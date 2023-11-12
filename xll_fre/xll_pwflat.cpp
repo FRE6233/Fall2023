@@ -1,10 +1,9 @@
-// xll_bootstrap.cpp - Bootstrap a piecewise flat forward curve
-#ifndef CATEGORY
-#define CATEGORY "FI"
-#define _CATEGORY "\\" CATEGORY
-#endif
+// xll_pwflat.cpp - Piecewise flat forward curve
 #include "fre_pwflat.h"
 #include "xll_fre.h"
+
+#undef CATEGORY
+#define CATEGORY "PWFLAT"
 
 using namespace xll;
 using namespace fre;
@@ -85,7 +84,7 @@ _FPX* WINAPI xll_pwflat(HANDLEX curve)
 AddIn xai_pwflat_value(
 	Function(XLL_FPX, "xll_pwflat_value", CATEGORY ".CURVE.VALUE")
 	.Arguments({
-		Arg(XLL_HANDLEX, "Curve", "is handle returned by " _CATEGORY ".CURVE"),
+		Arg(XLL_HANDLEX, "Curve", "is handle returned by \\" CATEGORY ".CURVE"),
 		Arg(XLL_FPX, "Time", "is an array of times."),
 		})
 		.Category(CATEGORY)
@@ -112,7 +111,7 @@ _FPX* WINAPI xll_pwflat_value(HANDLEX curve, _FPX* pt)
 AddIn xai_pwflat_spot(
 	Function(XLL_FPX, "xll_pwflat_spot", CATEGORY ".CURVE.SPOT")
 	.Arguments({
-		Arg(XLL_HANDLEX, "Curve", "is handle returned by " _CATEGORY ".CURVE."),
+		Arg(XLL_HANDLEX, "Curve", "is handle returned by \\" CATEGORY ".CURVE."),
 		Arg(XLL_FPX, "Time", "is an array of times."),
 		})
 		.Category(CATEGORY)
@@ -139,7 +138,7 @@ _FPX* WINAPI xll_pwflat_spot(HANDLEX curve, _FPX* pt)
 AddIn xai_pwflat_discount(
 	Function(XLL_FPX, "xll_pwflat_discount", CATEGORY ".CURVE.DISCOUNT")
 	.Arguments({
-		Arg(XLL_HANDLEX, "Curve", "is handle returned by " _CATEGORY ".CURVE."),
+		Arg(XLL_HANDLEX, "Curve", "is handle returned by \\" CATEGORY ".CURVE."),
 		Arg(XLL_FPX, "Time", "is an array of times."),
 		})
 		.Category(CATEGORY)
@@ -162,3 +161,32 @@ _FPX* WINAPI xll_pwflat_discount(HANDLEX curve, _FPX* pt)
 
 	return pt;
 }
+
+#if 0
+AddIn xai_pwflat_discount2(
+	Function(XLL_DOUBLE, "xll_pwflat_discount2", CATEGORY ".CURVE.DISCOUNT2")
+	.Arguments({
+		Arg(XLL_HANDLEX, "Curve", "is handle returned by \\" CATEGORY ".CURVE."),
+		Arg(XLL_DOUBLE, "Time", "is the time."),
+		})
+		.Category(CATEGORY)
+	.FunctionHelp("Return discount of a piecewise flat forward curve at given times.")
+);
+double WINAPI xll_pwflat_discount2(HANDLEX curve, double t)
+{
+#pragma XLLEXPORT
+	double result = INVALID_HANDLEX;
+
+	try {
+		handle<pwflat::curve<>> c(curve);
+		ensure(c);
+
+		result = c->discount(t);
+	}
+	catch (const std::exception& ex) {
+		XLL_ERROR(ex.what());
+	}
+
+	return result;
+}
+#endif // 0
