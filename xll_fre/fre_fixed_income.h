@@ -40,7 +40,9 @@ namespace fre::fixed_income {
 	{
 		auto p = C(0)*F(0);
 
-		p = i.size() * c.size(); // !!! implement
+		for (auto j = 0; j < i.size(); ++j) {
+			p += i.cash()[j] * c.discount(i.time()[j]);
+		}
 
 		return p;
 	}
