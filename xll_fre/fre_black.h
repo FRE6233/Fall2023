@@ -10,6 +10,9 @@
 
 namespace fre::black {
 
+	constexpr double epsilon = std::numeric_limits<double>::epsilon();
+	constexpr double NaN = std::numeric_limits<double>::quiet_NaN();
+
 	// F <= k iff Z <= log(k/f)/s + s/2
 	inline double moneyness(double f, double k, double s)
 	{
@@ -32,12 +35,13 @@ namespace fre::black {
 
 			return -normal::cdf(m, s);
 		}
-		// (d/ds)E[(k - F)^+] = E[-1(F <= k) dF/ds] = -P^s(Z <= m) (Z - s)
+		// (d/ds)F = F(Z - s)
+		// (d/ds)E[(k - F)^+] = E[-1(F <= k) dF/ds] = -f E^s[1(Z <= m) (Z - s)]
 		inline double vega(double f, double s, double k)
 		{
 			double m = moneyness(f, k, s);
 
-			return f*normal::pdf(m, s); //!!! fix this
+			return f*normal::pdf(m, s);
 		}
 #ifdef _DEBUG
 		inline int vega_test()
@@ -50,6 +54,36 @@ namespace fre::black {
 			double dv = (vup - vdn) / (2 * h);
 			double err = v - dv;
 			assert(fabs(err) < 10 * h);
+
+			return 0;
+		}
+#endif // _DEBUG
+		// Return vol s with p = value(f, s, k)
+		inline double implied(double f, double p, double k,
+			double eps = sqrt(epsilon), size_t N = 100, double s = 0.1)
+		{
+			while (fabs(p - value(f, s, k)) > eps) {
+				if (N-- == 0) {
+					return NaN;
+				}
+				double s_ = s - (value(f, s, k) - p) / vega(f, s, k); // Newton-Raphson
+				if (s_ < 0) {
+					s_ = s / 2;
+				}
+				std::swap(s_, s);
+			}
+
+			return s;
+		}
+#ifdef _DEBUG
+		inline int implied_test()
+		{
+			{
+				double f = 100, s = 0.2, k = 100;
+				double p = value(f, s, k);
+				s = implied(f, p, k);
+				assert(fabs(p - value(f, s, k)) < sqrt(epsilon));
+			}
 
 			return 0;
 		}

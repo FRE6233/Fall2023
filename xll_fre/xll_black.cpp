@@ -6,6 +6,7 @@ using namespace xll;
 
 #ifdef _DEBUG
 int test_vega = fre::black::put::vega_test();
+int test_implied = fre::black::put::implied_test();
 #endif // _DEBUG
 
 AddIn xai_black_moneyness(
