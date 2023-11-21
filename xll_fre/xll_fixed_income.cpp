@@ -8,6 +8,10 @@
 using namespace fre;
 using namespace xll;
 
+#ifdef _DEBUG
+int test_bootstrap = fixed_income::bootstrap_test();
+#endif // _DEBUG
+
 // !!! Implement FI.INSTRUMENT 
 AddIn xai_instrument_(
 	Function(XLL_HANDLE, "xll_instrument_", "\\" CATEGORY ".INSTRUMENT")

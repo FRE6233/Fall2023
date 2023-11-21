@@ -101,8 +101,9 @@ namespace fre {
 			std::vector<F> f;
 			F _f;
 		public:
-			constexpr curve()
-				: _f(NaN<F>)
+			// constant forward f
+			constexpr curve(F f = NaN<F>)
+				: _f(f)
 			{ }
 			constexpr curve(size_t n, const T* t_, const F* f_, F _f = NaN<F>)
 				: t(t_, t_ + n), f(f_, f_ + n), _f(_f)
@@ -144,7 +145,11 @@ namespace fre {
 			}
 			std::pair<T, F> back() const
 			{
-				return { t.back(), f.back() };
+				if (size() != 0) {
+					return { t.back(), f.back() };
+				}
+
+				return { 0, 0 };
 			}
 
 			// add point
@@ -166,6 +171,8 @@ namespace fre {
 			constexpr curve& extrapolate(F f_)
 			{
 				_f = f_;
+
+				return *this;
 			}
 
 			constexpr F value(T u) const

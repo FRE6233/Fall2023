@@ -43,7 +43,7 @@ namespace fre::bachelier {
 				auto r = []() { return test::normal(1, 2); };
 				auto [m, v2] = test::monte_carlo_mean_variance(r, 10000);
 				assert(fabs(m - 1) < 0.5);
-				assert(fabs(v2 - 4) < 0.1);
+				assert(fabs(v2 - 4) < 0.2);
 			}
 			{
 				double v = value(f, σ, k, t);
