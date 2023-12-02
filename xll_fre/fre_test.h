@@ -35,19 +35,19 @@ namespace fre::test {
 		return { m, v2 - m * m };
 	}
 
+	inline std::random_device rd;
+
 	inline double uniform(double a = 0, double b = 1)
 	{
-		static std::random_device rd;
-		std::uniform_real_distribution<> dis(a, b);
+		std::uniform_real_distribution<> dist(a, b);
 
-		return dis(rd);
+		return dist(rd);
 	}
 	inline double normal(double mu = 0, double sigma = 1)
 	{
-		static std::random_device rd;
-		std::normal_distribution<> dis(mu, sigma);
+		std::normal_distribution<> dist(mu, sigma);
 
-		return dis(rd);
+		return dist(rd);
 	}
 
 } // fre::test
