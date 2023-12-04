@@ -1,5 +1,8 @@
 // fre_binomial.h - Binomial model.
 #pragma once
+#ifdef _DEBUG
+#include <cassert>
+#endif // _DEBUG
 #include "../xll/xll/ensure.h"
 #include <cmath>
 #include <numeric>
@@ -8,105 +11,87 @@
 
 namespace fre::binomial {
 
-	constexpr size_t C(size_t n, size_t k)
+	// E[f(V_N)|V_n = k] = (E[f(V_N)|V_{n+1} = k] + E[f(V_N)|V_{n+1} = k+1])/2
+	constexpr double random_walk(const std::function<double(double)>& f, size_t N, size_t n, size_t k)
 	{
-		size_t c = 1;
+		ensure(n <= N);
+		ensure(k <= n);
 
-		// C(n, k) = C(n, n - k)
-		if (k > n - k)
-			k = n - k;
-
-		for (size_t i = 0; i < k; ++i) {
-			c *= n - i;
-			c /= i + 1;
+		if (n == N) {
+			return f(1.*k);
 		}
 
-		return c;
+		return (random_walk(f, N, n + 1, k + 1) + random_walk(f, N, n + 1, k)) / 2;
 	}
-	static_assert(C(5, 2) == 10);
-	static_assert(C(5, 3) == 10);
-
-	// V_n = k
-	struct atom {
-		size_t n, k;
-		constexpr atom (size_t n, size_t k)
-			: n(n), k(k)
-		{ }
-		// V_n
-		constexpr operator double() const
-		{
-			return static_cast<double>(k);
-		}
-		// P(V_n = k) = C(n,k)/2^n
-		constexpr double operator()() const
-		{
-			return 1. * C(n, k) / (1 << n);
-		}
-	};
-	static_assert(atom(5, 2)() == 10. / 32);
-
-	// A_n
-	struct algebra {
-		size_t n;
-		algebra(size_t n)
-			: n(n)
-		{ }
-		// atom(n, k), ..., atom(n, n - k)
-		class iterator {
-			size_t n, k;
-			size_t i; // current level
-		public:
-			using iterator_category = std::forward_iterator_tag;
-			using value_type = atom;
-
-			constexpr iterator(size_t n, size_t k, size_t i)
-				: n(n), k(k), i(i)
-			{
-				ensure(k <= n);
-				ensure(k <= i && i <= n - k);
-			}
-			constexpr iterator(size_t n, size_t k)
-				: iterator(n, k, k)
-			{ }
-			constexpr bool operator==(const iterator& i) const = default;
-			constexpr iterator begin() const
-			{
-				return iterator(n, k, k);
-			}
-			constexpr iterator end() const
-			{
-				return iterator(n, k, n - k + 1); // one past end
-			}
-			constexpr atom operator*() const
-			{
-				return atom(n, i);
-			}
-			constexpr iterator& operator++()
-			{
-				if (i <= n - k) {
-					++i;
-				}
-
-				return *this;
-			}
-		};
-	};
-
-	// E[f(V_N)|A_n] = (f(V_N) P_N)|_{A_n}
-	// E[f(V_N)|A_n](a) = sum {f(ak) P(ak) : ak in A_n}
-	constexpr auto expectation(const std::function<double(double)>& f, size_t N)
+#ifdef _DEBUG
+	inline int random_walk_test()
 	{
-		return [&f,N](atom a) constexpr { // a in A_n
-			double E = 0;
+		{
+			assert(0 == random_walk([](double x) { return x; }, 0, 0, 0));
+			assert(0.5 == random_walk([](double x) { return x; }, 1, 0, 0));
+			assert(1 == random_walk([](double x) { return x; }, 2, 0, 0));
+			assert(0 == random_walk([](double x) { return x; }, 3, 3, 0));
+			assert(1 == random_walk([](double x) { return x; }, 3, 3, 1));
+			assert(2 == random_walk([](double x) { return x; }, 3, 3, 2));
+			assert(3 == random_walk([](double x) { return x; }, 3, 3, 3));
+		}
 
-			for (const auto& ak : algebra::iterator(N, a.k)) {
-				// use operator double() and operator()() for atom
-				E += f(ak) * ak();
-			}
-
-			return E;
-		};
+		return 0;
 	}
-	//static_assert(expectation([](double x) constexpr { return x * x; }, 5)(atom(5, 2)) == 10. / 32 * 4);
+#endif // _DEBUG
+	
+	// max_{tau <= N} E[f(V_)|V_tau = k, tau >= n]
+	constexpr double american_random_walk(const std::function<double(double)>& f, size_t N, size_t n, size_t k)
+	{
+		ensure(n <= N);
+		ensure(k <= n);
 
+		if (n == N) {
+			return f(1.*k);
+		}
+		
+		double v = (american_random_walk(f, N, n + 1, k) + american_random_walk(f, N, n + 1, k + 1)) / 2;
+		
+		return std::max(f(1.*k), v);
+	}
+#ifdef _DEBUG
+	inline int american_random_walk_test()
+	{
+		{
+			assert(0 == american_random_walk([](double x) { return x; }, 0, 0, 0));
+			assert(0.5 == american_random_walk([](double x) { return x; }, 1, 0, 0));
+			assert(1 == american_random_walk([](double x) { return x; }, 2, 0, 0));
+			assert(0 == american_random_walk([](double x) { return x; }, 3, 3, 0));
+			assert(1 == american_random_walk([](double x) { return x; }, 3, 3, 1));
+			assert(2 == american_random_walk([](double x) { return x; }, 3, 3, 2));
+			assert(3 == american_random_walk([](double x) { return x; }, 3, 3, 3));
+		}
+		{
+			// call option never exercised early
+			for (double k : { 0., 0.5, 1., 1.5, 2. }) {
+				const auto c = [k](double x) { return std::max(x - k, 0.); };
+				double v = random_walk(c, 2, 0, 0);
+				double av = american_random_walk(c, 2, 0, 0);
+				assert(v == av);
+			}
+			for (double k : { 0., 0.5, 1., 1.5, 2. }) {
+				const auto p = [k](double x) { return std::max(k - x, 0.); };
+				double v = random_walk(p, 2, 0, 0);
+				double av = american_random_walk(p, 2, 0, 0);
+				assert(v <= av);
+				assert(av == p(0.));
+			}
+			const auto F = [n](double x) { return std::exp(x); };
+			for (double k : { 0., 0.5, 1., 1.5, 2. }) {
+				const auto p = [k](double x) { return std::max(std::exp(k) - std::exp(x), 0.); };
+				double v = random_walk(p, 2, 0, 0);
+				double av = american_random_walk(p, 2, 0, 0);
+				assert(v <= av);
+				assert(av == p(0.));
+			}
+		}
+
+		return 0;
+	}
+#endif // _DEBUG
 } // namespace fre::binomial

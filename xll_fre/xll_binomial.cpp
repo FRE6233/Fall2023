@@ -5,6 +5,11 @@
 using namespace fre;
 using namespace xll;
 
+#ifdef _DEBUG
+int test_random_walk = binomial::random_walk_test();
+int test_american_random_walk = binomial::american_random_walk_test();
+#endif // _DEBUG
+#if 0
 static AddIn xai_fre_binomial(
 	Function(XLL_DOUBLE, "xll_fre_binomial", "FRE.BINOMIAL")
 	.Arguments({
@@ -18,3 +23,4 @@ static AddIn xai_fre_binomial(
 	.Category(CATEGORY)
 	.FunctionHelp("Return the binomial price of a European option.")
 );
+#endif // 0
