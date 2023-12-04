@@ -66,7 +66,7 @@ namespace fre::black {
 				if (N-- == 0) {
 					return NaN;
 				}
-				double s_ = s - (value(f, s, k) - p) / vega(f, s, k); // Newton-Raphson
+				double s_ = s - (value(f, s, k) - p) / vega(f, s, k); // Newton-Raphson x' = x - f(x)/f'(x)
 				if (s_ < 0) {
 					s_ = s / 2;
 				}

@@ -19,7 +19,7 @@ AddIn xai_instrument_(
 		Arg(XLL_FPX, "Time", "is an array of positive increasing times."),
 		Arg(XLL_FPX, "Cash", "is an array of cash flows."),
 		})
-		.Uncalced()
+	.Uncalced()
 	.Category(CATEGORY)
 	.FunctionHelp("Return a handle to a piece-wise flat forward curve.")
 );
@@ -31,10 +31,10 @@ HANDLEX WINAPI xll_instrument_(const _FPX* pu, const _FPX* pc)
 	try {
 		ensure(size(*pu) == size(*pc));
 
-			handle<fixed_income::instrument<>> c(new fixed_income::instrument(size(*pu), pu->array, pc->array));
-			ensure(c);
+		handle<fixed_income::instrument<>> c(new fixed_income::instrument(size(*pu), pu->array, pc->array));
+		ensure(c);
 
-			h = c.get();
+		h = c.get();
 	}
 	catch (const std::exception& ex) {
 		XLL_ERROR(ex.what());

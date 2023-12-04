@@ -118,7 +118,8 @@ namespace fre::fixed_income {
 		auto dpv = [&i, &c, t_](F f) { return duration(i, c.extrapolate(f), t_); };
 		
 		while (fabs(pv(_f) - p) > eps) {
-			ensure(N--);
+			N = N;
+			//ensure(N--);
 			//_f = _f; // !!! use Newton-Raphson for root of pv - p
 		}
 		
@@ -130,8 +131,8 @@ namespace fre::fixed_income {
 		{
 			// initial cash deposit
 			auto i = instrument({ 1. }, { 1.02 });
-			auto c = pwflat::curve();
-			auto p = present_value(i, c.extrapolate(0.03));
+			auto c = pwflat::curve(0.03);
+			auto p = present_value(i, c);// .extrapolate(0.03));
 			auto _f = bootstrap(i, c, p);
 			ensure(fabs(_f - .03) < 10*sqrt(epsilon<double>));
 		}
