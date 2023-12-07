@@ -9,18 +9,23 @@ using namespace xll;
 int test_random_walk = binomial::random_walk_test();
 int test_american_random_walk = binomial::american_random_walk_test();
 #endif // _DEBUG
-#if 0
-static AddIn xai_fre_binomial(
-	Function(XLL_DOUBLE, "xll_fre_binomial", "FRE.BINOMIAL")
+
+AddIn xai_binomial_american_put(
+	Function(XLL_DOUBLE, "xll_binomial_american_put", "BINOMIAL.AMERICAN.PUT.VALUE")
 	.Arguments({
+		Arg(XLL_DOUBLE, "r", "is the risk free rate."),
 		Arg(XLL_DOUBLE, "s", "is the spot price."),
-		Arg(XLL_DOUBLE, "k", "is the strike price."),
-		Arg(XLL_DOUBLE, "r", "is the risk-free interest rate."),
 		Arg(XLL_DOUBLE, "sigma", "is the volatility."),
-		Arg(XLL_DOUBLE, "t", "is the time to expiration."),
-		Arg(XLL_DOUBLE, "n", "is the number of steps."),
-	})
+		Arg(XLL_DOUBLE, "k", "is the strike price."),
+		Arg(XLL_DOUBLE, "t", "is the time in years to expiration."),
+		Arg(XLL_DOUBLE, "dt", "is the binomial step size in years."),
+		})
 	.Category(CATEGORY)
-	.FunctionHelp("Return the binomial price of a European option.")
+	.FunctionHelp("Return American put value using the binomial model.")
 );
-#endif // 0
+double WINAPI xll_binomial_american_put(double r, double s, double sigma, double k, double t, double dt)
+{
+#pragma XLLEXPORT
+
+	return fre::binomial::american_put_value(r, s, sigma, k, t, dt);		
+}

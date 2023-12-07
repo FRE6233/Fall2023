@@ -119,7 +119,7 @@ namespace fre::fixed_income {
 		
 		while (fabs(pv(_f) - p) > eps) {
 			ensure(N--);
-			//_f = _f; // !!! use Newton-Raphson for root of pv - p
+			_f = _f - (pv(_f) - p)/dpv(_f); // use Newton-Raphson for root of pv - p
 		}
 		
 		return _f;
