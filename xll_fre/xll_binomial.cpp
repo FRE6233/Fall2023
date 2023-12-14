@@ -14,7 +14,7 @@ AddIn xai_binomial_american_put(
 	Function(XLL_DOUBLE, "xll_binomial_american_put", "BINOMIAL.AMERICAN.PUT.VALUE")
 	.Arguments({
 		Arg(XLL_DOUBLE, "r", "is the risk free rate."),
-		Arg(XLL_DOUBLE, "s", "is the spot price."),
+		Arg(XLL_DOUBLE, "S0", "is the spot price."),
 		Arg(XLL_DOUBLE, "sigma", "is the volatility."),
 		Arg(XLL_DOUBLE, "k", "is the strike price."),
 		Arg(XLL_DOUBLE, "t", "is the time in years to expiration."),
@@ -23,9 +23,9 @@ AddIn xai_binomial_american_put(
 	.Category(CATEGORY)
 	.FunctionHelp("Return American put value using the binomial model.")
 );
-double WINAPI xll_binomial_american_put(double r, double s, double sigma, double k, double t, double dt)
+double WINAPI xll_binomial_american_put(double r, double S0, double sigma, double k, double t, double dt)
 {
 #pragma XLLEXPORT
 
-	return fre::binomial::american_put_value(r, s, sigma, k, t, dt);		
+	return fre::binomial::american_put_value(r, S0, sigma, k, t, dt);		
 }
