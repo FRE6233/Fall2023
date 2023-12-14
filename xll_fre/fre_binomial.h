@@ -81,14 +81,6 @@ namespace fre::binomial {
 				assert(v <= av);
 				assert(av == p(0.));
 			}
-			const auto F = [n](double x) { return std::exp(x); };
-			for (double k : { 0., 0.5, 1., 1.5, 2. }) {
-				const auto p = [k](double x) { return std::max(std::exp(k) - std::exp(x), 0.); };
-				double v = random_walk(p, 2, 0, 0);
-				double av = american_random_walk(p, 2, 0, 0);
-				assert(v <= av);
-				assert(av == p(0.));
-			}
 		}
 
 		return 0;

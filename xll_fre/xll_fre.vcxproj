@@ -155,11 +155,14 @@
     <ClInclude Include="fre_fixed_income.h" />
     <ClInclude Include="fre_ho_lee.h" />
     <ClInclude Include="fre_normal.h" />
+    <ClInclude Include="fre_option.h" />
     <ClInclude Include="fre_pwflat.h" />
     <ClInclude Include="fre_test.h" />
+    <ClInclude Include="fre_variate.h" />
     <ClInclude Include="xll_fre.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="xll_option.cpp" />
     <ClCompile Include="xll_bachelier.cpp" />
     <ClCompile Include="xll_binomial.cpp" />
     <ClCompile Include="xll_black.cpp" />
@@ -169,6 +172,7 @@
     <ClCompile Include="xll_ho_lee.cpp" />
     <ClCompile Include="xll_normal.cpp" />
     <ClCompile Include="xll_pwflat.cpp" />
+    <ClCompile Include="xll_variate.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
