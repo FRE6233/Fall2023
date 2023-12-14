@@ -53,9 +53,9 @@ namespace fre::variate {
 	};
 
 	// X standard normal random variate
-	struct normal : public nvi {
+	class normal : public nvi {
 		std::normal_distribution<> n;
-		
+	public:
 		normal(double mean = 0, double sigma = 1)
 			: n(mean, sigma)
 		{ }
@@ -78,13 +78,13 @@ namespace fre::variate {
 		// log E[e^{sX}] = log exp(E[sX] + Var(sX)/2) = s^2/2
 		double cgf_(double s) const override
 		{
-			return s * s / 2;
+			return n.mean() * s + n.sigma() * n.sigma() * s * s / 2;
 		}
 		// P_s(X <= x) = P(X <= x - s)
 		double cdf_(double x, double s) const override
 		{
-			double z = (x - s - n.mean())/ n.sigma();
-			
+			double z = (x - s - n.mean()) / n.sigma();
+
 			return std::erfc(-z / std::sqrt(2)) / 2;
 		}
 	};
@@ -108,7 +108,7 @@ namespace fre::variate {
 			return std::inner_product(begin(x_), end(x_),
 				p.probabilities().begin(), 0.0,
 				std::plus<double>(),
-				[f](double x, double p) { return f(x) * p; });
+				[f](double xi, double pi) { return f(xi) * pi; });
 		}
 		discrete& std_() override
 		{
