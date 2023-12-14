@@ -45,6 +45,12 @@
     <ClInclude Include="fre_binomial.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="fre_option.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="fre_variate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xll_fre.cpp">
@@ -72,6 +78,12 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xll_binomial.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xll_option.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xll_variate.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
