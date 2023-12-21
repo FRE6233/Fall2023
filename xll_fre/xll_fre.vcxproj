@@ -159,9 +159,11 @@
     <ClInclude Include="fre_pwflat.h" />
     <ClInclude Include="fre_test.h" />
     <ClInclude Include="fre_variate.h" />
+    <ClInclude Include="fre_vswap.h" />
     <ClInclude Include="xll_fre.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="xll_vswap.cpp" />
     <ClCompile Include="xll_option.cpp" />
     <ClCompile Include="xll_bachelier.cpp" />
     <ClCompile Include="xll_binomial.cpp" />

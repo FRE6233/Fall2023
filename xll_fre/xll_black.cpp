@@ -77,6 +77,23 @@ double WINAPI xll_black_put_implied(double f, double p, double k)
 	return fre::black::put::implied(f, p, k);
 }
 
+AddIn xai_black_call(
+	Function(XLL_DOUBLE, "xll_black_call", "BLACK.CALL.VALUE")
+	.Arguments({
+		Arg(XLL_DOUBLE, "f", "is the forward price."),
+		Arg(XLL_DOUBLE, "s", "is the volatility."),
+		Arg(XLL_DOUBLE, "k", "is the strike price."),
+		})
+		.Category(CATEGORY)
+	.FunctionHelp("Return the black call value.")
+);
+double WINAPI xll_black_call(double f, double s, double k)
+{
+#pragma XLLEXPORT
+
+	return fre::black::call::value(f, s, k);
+}
+
 AddIn xai_black_call_implied(
 	Function(XLL_DOUBLE, "xll_black_call_implied", "BLACK.CALL.IMPLIED")
 	.Arguments({
