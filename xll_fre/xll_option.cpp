@@ -5,7 +5,6 @@
 using namespace xll;
 using namespace fre;
 
-
 AddIn xai_fre_option_moneyness(
 	Function(XLL_DOUBLE, "xll_fre_option_moneyness", "OPTION.MONENESS")
 	.Arguments({

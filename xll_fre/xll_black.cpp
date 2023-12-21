@@ -59,3 +59,37 @@ double WINAPI xll_black_put_delta(double f, double s, double k)
 
 	return fre::black::put::delta(f, s, k);
 }
+
+AddIn xai_black_put_implied(
+	Function(XLL_DOUBLE, "xll_black_put_implied", "BLACK.PUT.IMPLIED")
+	.Arguments({
+		Arg(XLL_DOUBLE, "f", "is the forward price."),
+		Arg(XLL_DOUBLE, "p", "is the put price."),
+		Arg(XLL_DOUBLE, "k", "is the strike price."),
+		})
+		.Category(CATEGORY)
+	.FunctionHelp("Return the black put implied volatility.")
+);
+double WINAPI xll_black_put_implied(double f, double p, double k)
+{
+#pragma XLLEXPORT
+
+	return fre::black::put::implied(f, p, k);
+}
+
+AddIn xai_black_call_implied(
+	Function(XLL_DOUBLE, "xll_black_call_implied", "BLACK.CALL.IMPLIED")
+	.Arguments({
+		Arg(XLL_DOUBLE, "f", "is the forward price."),
+		Arg(XLL_DOUBLE, "c", "is the call price."),
+		Arg(XLL_DOUBLE, "k", "is the strike price."),
+		})
+		.Category(CATEGORY)
+	.FunctionHelp("Return the black put implied volatility.")
+);
+double WINAPI xll_black_call_implied(double f, double p, double k)
+{
+#pragma XLLEXPORT
+
+	return fre::black::call::implied(f, p, k);
+}
