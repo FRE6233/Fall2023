@@ -12,7 +12,109 @@
 
 namespace fre::binomial {
 
-	// E[f(V_N)|V_n = k] = (E[f(V_N)|V_{n+1} = k] + E[f(V_N)|V_{n+1} = k+1])/2
+#if 0
+	constexpr size_t binom(size_t n, size_t k)
+	{
+		if (k == 0 || k == n) {
+			return 1;
+		}
+
+		if (2*k > n) {
+			k = n - k;
+		}
+
+		return binom(n - 1, k - 1) + binom(n - 1, k);
+	}
+
+	// Atom of A_n. V_n = k, 0 <= k <= n
+	struct atom {
+		size_t n, k;
+		constexpr atom(size_t n, size_t k)
+			: n(n), k(k)
+		{ }
+		// V_n = k
+		constexpr operator double() const
+		{
+			return 1.*k;
+		}
+		// P(V_n = k) = binom(n, k)/2^n
+		constexpr double operator()() const
+		{
+			return binom(n, k)/static_cast<double>(1<<n);
+		}
+		double operator*() const
+		{
+			return 1. * k;
+		}
+		atom& operator++()
+		{
+			if (k <= n) {
+				++k;
+			}
+
+			return *this;
+		}
+		// Atoms in A_N containg atom(n, k).
+		// atom(N, k), atom(N, k + 1), ..., atom(N, n - k)
+		class atoms {
+			size_t i, k, n, N;
+		public:
+			using value_type = atom;
+			using iterator_category = std::forward_iterator_tag;
+
+			constexpr atoms(size_t N, atom a)
+				: i(a.k), k(a.k), n(a.n), N(N)
+			{
+				//ensure (n <= N);
+			}
+			constexpr atoms(const atoms&) = default;
+			constexpr atoms& operator=(const atoms&) = default;
+			constexpr ~atoms() = default;
+
+			constexpr bool operator==(const atoms& a) const = default;
+
+			constexpr atom begin() const
+			{
+				return atom(n, k);
+			}
+			constexpr atom end() const
+			{
+				return atom(n, n - k + 1);
+			}
+			constexpr atom operator*() const
+			{
+				return atom(n, i);
+			}
+			atoms& operator++()
+			{
+				if (i <= n) {
+					++i;
+				}
+
+				return *this;
+			}
+		};
+	};
+	static_assert(0 == atom(0, 0));
+	static_assert(1 == atom(0, 0)());
+	static_assert(.5 == atom(2, 1)());
+
+	// E[f(V_N)|V_n = k]
+	double expectation(const std::function<double(double)>& f, size_t N, const atom& a)
+	{
+		if (N == a.n) {
+			return f(a());
+		}
+
+		double E = 0;
+		for (auto ai : atom::atoms(N, a)) {
+			E += expectation(f, N, ai) * ai();
+		}
+
+		return E;
+	}
+#endif 	
+	// E[f(V_N)|V_n = k] = (E[f(V_N)|V_n = k, V_{n+1} = k] + E[f(V_N)|V_n = k, V_{n+1} = k+1])/2
 	constexpr double random_walk(const std::function<double(double)>& f, size_t N, size_t n, size_t k)
 	{
 		ensure(n <= N);
@@ -100,7 +202,8 @@ namespace fre::binomial {
 		size_t N = static_cast<size_t>(t / dt);
 		double s = sigma * sqrt(t);
 		// !!!Fix CodePilot generated code.
-		const auto f = [r, S0, s, k](double x) { return std::max(k - S0 * exp(r * x), 0.); };
+		//const auto f = [r, S0, s, k](double x) { return std::max(k - S0 * exp(r * x), 0.); };
+		const auto f = [r, S0, s, k, t](double x) { return std::max(k - S0 * exp(r + s * x), 0.); };
 		
 		return american_random_walk(f, N, 0, 0);
 	}
