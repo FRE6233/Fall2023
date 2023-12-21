@@ -102,6 +102,17 @@ namespace fre::black {
 		{
 			return put::delta(f, s, k) + 1;
 		}
+
+		inline double vega(double f, double s, double k)
+		{
+			return put::vega(f, s, k);
+		}
+
+		inline double implied(double f, double p, double k,
+			double eps = sqrt(epsilon), size_t N = 100, double s = 0.1)
+		{
+			return put::implied(f, p - f + k, k, eps, N, s);
+		}
 	}
 
 } // namespace fre::black

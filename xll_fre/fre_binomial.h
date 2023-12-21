@@ -153,7 +153,7 @@ namespace fre::binomial {
 			return f(1.*k);
 		}
 		
-		double v = american_random_walk(f, N, n + 1, k)/2 + american_random_walk(f, N, n + 1, k + 1)/ 2;
+		double v = (american_random_walk(f, N, n + 1, k) + american_random_walk(f, N, n + 1, k + 1))/ 2;
 		
 		return std::max(f(1.*k), v);
 	}
