@@ -15,7 +15,7 @@
 namespace fre::option {
 
 	// F <= k iff X <= (log(k/f) + kappa(s))/s 
-	inline double moneyness(double f, double s, double k, const variate::nvi& v)
+	inline double moneyness(double f, double s, double k, const variate::nvi& v = variate::normal{})
 	{
 		return (std::log(k / f) + v.cgf(s)) / s;
 	}
@@ -26,7 +26,7 @@ namespace fre::option {
 		//              = k P(F <= k) - E[F 1(F <= k)]
 		//              = k P(F <= k) - E[F] E(F/E[F] 1(F <= k)]
 		//              = k P(F <= k) - f P_s(F <= k)]
-		inline double value(double f, double s, double k, const variate::nvi& v)
+		inline double value(double f, double s, double k, const variate::nvi& v = variate::normal{})
 		{
 			double z = moneyness(f, s, k, v);
 
@@ -34,11 +34,11 @@ namespace fre::option {
 		}
 
 		// (d/df) E[(k - F)^+] = E[-1(F <= k) dF/df] = -P_s(F <= k)
-		inline double delta(double f, double s, double k, const variate::nvi& v)
+		inline double delta(double f, double s, double k, const variate::nvi& v = variate::normal{})
 		{
 			double z = moneyness(f, s, k, v);
 
-			return z; //!!! fix this
+			return -v.cdf(z, s);
 		}
 
 	} // namespace put

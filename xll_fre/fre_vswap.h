@@ -5,6 +5,8 @@
 #include <algorithm>
 #include <vector>
 #include "../xll/xll/ensure.h"
+#include <numeric>
+#include <valarray>
 
 namespace fre::vswap {
 
@@ -25,6 +27,17 @@ namespace fre::vswap {
 			ensure(std::is_sorted(x.begin(), x.end()));
 		}
 		// value at x
+		// first derivative at x
+		double derivative(double x_) const
+		{
+			size_t i = index(x_);
+			if (i == x.size() - 1) {
+				ensure(x_ > x.back());
+				--i; // use last two points
+			}
+			return (y[i + 1] - y[i]) / (x[i + 1] - x[i]);
+		}
+
 		double value(double x_) const
 		{
 			size_t i = index(x_);
@@ -37,24 +50,52 @@ namespace fre::vswap {
 			return y[i] + m * (x_ - x[i]);
 		}
 
-		// first derivative at x
-		double derivative(double x_) const
-		{
-			return x_; //!!! fix this
-		}
-
 		// second derivative at x[1], ..., x[n-2]
 		std::vector<double> delta()
 		{
-			return std::vector<double>{}; // !!! fix this
+			std::vector<double> d(x.size());
+
+			for (size_t i = 1; i < x.size() - 1; ++i) {
+				d[i - 1] = derivative(x[i]);
+			}
+			for (size_t i = 1; i < x.size() - 1; ++i) {
+				d[i - 1] = d[i] - d[i - 1];
+			}		
+			d.resize(d.size() - 2);
+
+			return d;
 		}
 	};
 
+	// Variance swap static payoff.
+	inline double vs(double x, double z)
+	{
+		return -2 * std::log(x / z) + 2 * (x - z) / z;
+	}
+
 	// par variance given strikes, put, and call prices
 	// use put prices for strikes < forward and call prices for strikes >= forward
-	double variance(double f, size_t n, const double* k, const double* p, double* c)
+	double variance(double z, size_t n, const double* k, const double* p, const double* c)
 	{
-		return f*n*k[0]*p[0]*c[0]; // !!! fix this
+		std::vector<double> w(n); // static hedge payoff at strikes
+		for (size_t i = 0; i < w.size(); ++i) {
+			w[i] = vs(k[i], z);
+		}
+		pwlinear pw(n, k, w.data());
+
+		double s2 = pw.value(z);
+		size_t i = 1;
+		while (k[i] < z && i < n - 1) {
+			s2 += w[i] * p[i];
+			++i;
+		}
+		while(i < n - 1) {
+			s2 += w[i] * c[i];
+			++i;
+		}
+		s2 += pw.value(z);
+
+		return s2;
 	}
 
 } // namespace fre::vswap
