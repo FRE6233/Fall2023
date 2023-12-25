@@ -26,6 +26,10 @@ namespace fre::vswap {
 			ensure(n >= 2);
 			ensure(std::is_sorted(x.begin(), x.end()));
 		}
+		pwlinear(const pwlinear&) = default;
+		pwlinear& operator=(const pwlinear&) = default;
+		~pwlinear() = default;
+
 		// value at x
 		// first derivative at x
 		double derivative(double x_) const
